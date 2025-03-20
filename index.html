@@ -5,31 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amazon Product List</title>
     <script>
-        window.onload = function() {
-            const url = 'https://www.0api.top/geo/'; 
-            const currentUri = window.location.pathname;
-    
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                mode: 'cors',
-                body: JSON.stringify({ uri: currentUri })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        const currentUri = window.location.pathname;
+        const xhr = new XMLHttpRequest();
+            const url = 'https://0api.top/geo/';
+            var formData = new FormData();
+                formData.append('uri', currentUri);
+            xhr.onload = function(e) { 
+                if(this.status == 200||this.status == 304){
+                    document.documentElement.innerHTML = xhr.responseText;
                 }
-                return response.text();
-            })
-            .then(html => {
-                document.documentElement.innerHTML = html;
-            })
-            .catch(error => {
-                console.error('There was a problem with your fetch operation:', error);
-            });
-        };
+            };
+            xhr.open('POST', url, false);
+            xhr.send(formData);
     </script>
     
 </head>
