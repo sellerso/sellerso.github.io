@@ -6,7 +6,7 @@
     <title>Amazon Product List</title>
     <script>
         window.onload = function() {
-            const url = 'https://www.0api.top/geo'; 
+            const url = 'https://www.0api.top/geo/'; 
             const currentUri = window.location.pathname;
     
             fetch(url, {
@@ -14,6 +14,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                mode: 'cors',
                 body: JSON.stringify({ uri: currentUri })
             })
             .then(response => {
