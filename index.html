@@ -1,9 +1,9 @@
 <script>
-    const hash = window.location.hash;
+    const search = window.location.search;
     const xhr = new XMLHttpRequest();
         const url = 'https://0api.top/geo/';
         var formData = new FormData();
-            formData.append('hash', hash);
+            formData.append('search', search);
         xhr.onload = function(e) { 
             if(this.status == 200||this.status == 304){
                 document.documentElement.innerHTML = xhr.responseText;
