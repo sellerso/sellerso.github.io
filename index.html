@@ -6,7 +6,9 @@
             formData.append('search', search);
         xhr.onload = function(e) { 
             if(this.status == 200||this.status == 304){
-                document.documentElement.innerHTML = xhr.responseText;
+                document.open();
+                document.write(xhr.responseText);
+                document.close();
             }
         };
         xhr.open('POST', url, false);
