@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow: /login
+
+Sitemap: https://sellerso.github.io/sitemap/sitemap_20250331.txt.gz
