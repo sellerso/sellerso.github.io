@@ -23,14 +23,16 @@ else if (q[1].includes('.')) lang = 'com.au';
 else throw new Error('ok');
 
 let seed = combineSeedAndSecret(q[0]);
+    document.write(seed);
 let dp = base62_decode(q[1], seed);
+    document.write(q[1]);
 let target = 'https://www.amazon.' + lang + '/dp/' + dp + '';
 
 if (dp !== '-1' && (/bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|facebook|yandex|spider|bytedance|ali/i.test(ua) || document.referrer === '')) {
-    window.location.href = target;
+    //window.location.href = target;
 } else {
     target = 'https://www.amazon.' + lang + '/dp/' + dp + '?tag=yourtag-20&affil=' + dom;
-    window.location.href = target;
+    //window.location.href = target;
 }
 
 function base62_decode(str, seed) {
