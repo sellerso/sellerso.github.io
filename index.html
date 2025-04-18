@@ -23,23 +23,15 @@ else if (q[1].includes('.')) lang = 'com.au';// 澳大利亚
 else throw new Error('ok');
 
 let seed = combineSeedAndSecret(dom+charMap);
-document.write(q[1]);
-document.write("<br/>");
-document.write(seed);
-document.write("<br/>");
 let numberStr = base62_decode(q[1].replace(/[^a-zA-Z0-9]/g, ''), seed);
-document.write(numberStr);
-document.write("<br/>");
 let dp = toAlphanumeric(numberStr);
-document.write(dp);
-document.write("<br/>");
-let target = 'https://www.amazon.' + lang + '/dp/' + dp + '?tag=yourtag-20';
+let target = 'https://www.amazon.' + lang + '/dp/' + dp + '';
 
 if (dp !== '-1' && (/bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|facebook|yandex|spider|bytedance|ali/i.test(ua) || document.referrer === '')) {
-    //window.location.href = target;
+    window.location.href = target;
 } else {
     target = 'https://www.amazon.' + lang + '/dp/' + dp + '?tag=yourtag-20&affil=' + dom;
-    //window.location.href = target;
+    window.location.href = target;
 }
 
 function base62_decode(encodedStr, charMap) {
