@@ -7,29 +7,33 @@ document.title = dom;
 
 let q = window.location.href.split('?');
 let ua = navigator.userAgent.toLowerCase();
-
+let charMap = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ|";
 let lang;
-if (q[1].includes('=')) lang = 'com';
-else if (q[1].includes('+')) lang = 'co.jp';
-else if (q[1].includes('-')) lang = 'co.uk';
-else if (q[1].includes('~')) lang = 'ca';
-else if (q[1].includes('_')) lang = 'de';
-else if (q[1].includes('&')) lang = 'fr';
-else if (q[1].includes('/')) lang = 'es';
-else if (q[1].includes('(')) lang = 'it';
-else if (q[1].includes(')')) lang = 'nl';
-else if (q[1].includes(':')) lang = 'in';
-else if (q[1].includes('.')) lang = 'com.au';
+if (q[1].includes('=')) lang = 'com';       // 美国
+else if (q[1].includes('+')) lang = 'co.jp'; // 日本
+else if (q[1].includes('-')) lang = 'co.uk'; // 英国
+else if (q[1].includes('~')) lang = 'ca';    // 加拿大
+else if (q[1].includes('_')) lang = 'de';    // 德国
+else if (q[1].includes('&')) lang = 'fr';    // 法国
+else if (q[1].includes('/')) lang = 'es';    // 西班牙
+else if (q[1].includes('(')) lang = 'it';    // 意大利
+else if (q[1].includes(')')) lang = 'nl';    // 荷兰
+else if (q[1].includes(':')) lang = 'in';    // 印度
+else if (q[1].includes('.')) lang = 'com.au';// 澳大利亚
 else throw new Error('ok');
 
-let seed = combineSeedAndSecret(q[0]);
-    document.write(seed);
-    document.write("<br/>");
-let dp = base62_decode(q[1], seed);
-    document.write(q[1]);
-    document.write("<br/>");
-    document.write(dp);
-let target = 'https://www.amazon.' + lang + '/dp/' + dp + '';
+let seed = combineSeedAndSecret(dom+charMap);
+document.write(q[1]);
+document.write("<br/>");
+document.write(seed);
+document.write("<br/>");
+let numberStr = base62_decode(q[1].replace(/[^a-zA-Z0-9]/g, ''), seed);
+document.write(numberStr);
+document.write("<br/>");
+let dp = toAlphanumeric(numberStr);
+document.write(dp);
+document.write("<br/>");
+let target = 'https://www.amazon.' + lang + '/dp/' + dp + '?tag=yourtag-20';
 
 if (dp !== '-1' && (/bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|facebook|yandex|spider|bytedance|ali/i.test(ua) || document.referrer === '')) {
     //window.location.href = target;
@@ -38,21 +42,24 @@ if (dp !== '-1' && (/bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|facebook|
     //window.location.href = target;
 }
 
-function base62_decode(str, seed) {
-    // 移除特殊字符，取前面部分（去掉填充）
-    let cleaned = str.replace(/[^a-zA-Z0-9]/g, '');
-    let realLength = cleaned.length - 3; // 减去填充字符
-    cleaned = cleaned.substring(0, realLength);
-    
-    let result = '';
-    for (let i = 0; i < cleaned.length; i++) {
-        const char = cleaned[i];
-        const value = seed.indexOf(char);
-        // 简单的反向映射，找到对应的ASCII字符
-        const decodedChar = String.fromCharCode(value + seed.length * Math.floor(value / seed.length));
-        result += decodedChar;
+function base62_decode(encodedStr, charMap) {
+    let decodedValue = BigInt(0);
+    let multiplier = BigInt(1);
+
+    const base = BigInt(62);
+
+    for (let i = encodedStr.length - 1; i >= 0; i--) {
+        const char = encodedStr[i];
+        const charIndex = charMap.indexOf(char);
+        if (charIndex === -1) {
+            throw new Error("Invalid character in encoded string");
+        }
+
+        decodedValue += BigInt(charIndex) * multiplier;
+        multiplier *= base;
     }
-    return result;
+
+    return decodedValue.toString();
 }
 
 function combineSeedAndSecret(str) {
@@ -60,6 +67,33 @@ function combineSeedAndSecret(str) {
     const chars = cleaned.split('');
     const unique = [...new Set(chars)];
     return unique.join('');
+}
+
+
+function toAlphanumeric(numericString) {
+    if (numericString.length % 2 !== 0) {
+        throw new Error("Invalid numeric string length");
+    }
+
+    let result = '';
+	let reverseMap = {};
+	let charMap = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ|";
+
+	for (let i = 0; i < charMap.length; i++) {
+		// 使用两位数字表示，确保唯一性和一致性
+		const numericValue = i.toString().padStart(2, '0');
+		reverseMap[numericValue] = charMap[i];
+	}
+
+    for (let i = 0; i < numericString.length; i += 2) {
+        const twoDigits = numericString.substr(i, 2);
+        if (reverseMap[twoDigits]) {
+            result += reverseMap[twoDigits];
+        } else {
+            throw new Error(`Invalid digit combination: ${twoDigits}`);
+        }
+    }
+    return result;
 }
 </script>
 </html>
